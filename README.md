@@ -282,13 +282,11 @@ input_ids.scatter_(1, mask_indexes, self.mask_tensor)
 ```
 This appears to be a PyTorch error.
 
-## Spinning Up My Own Text Generation
+## Hugging Face Notebook
 
-https://stackoverflow.com/questions/60142937/huggingface-transformers-for-text-generation-with-ctrl-with-google-colabs-free
+There is a [Google Colab notebook from Hugging Face](https://colab.research.google.com/github/huggingface/blog/blob/master/notebooks/02_how_to_generate.ipynb
+) which goes into some of the details behind GPT2-style text generation using improved transformer architecture and decoding methods.
 
-How to generate text:
-
-https://colab.research.google.com/github/huggingface/blog/blob/master/notebooks/02_how_to_generate.ipynb
 
 
 How to train new language model from scratch

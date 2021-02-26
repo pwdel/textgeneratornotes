@@ -44,9 +44,49 @@ We are using a pre-trained GPT2 dataset. The documentation for [gpt2tokenizer is
 
 The documentation for [tfgpt2lmheadmodel is here](https://huggingface.co/transformers/model_doc/gpt2.html#gpt2lmheadmodel).
 
-1. Tokenization with gpt2tokenizer, using pre-trained model. This works based upon byte-level pair encoding.
-2. model using tfgpt2lmheadmodel, using pre-trained model. 
+1. Tokenization with gpt2tokenizer, using pre-trained model. This works based upon byte-level pair encoding. This was based upon a model built using 40GB of text data.
+2. model using tfgpt2lmheadmodel, using pre-trained model. This basically uses linear weights tied to the input embedding.
+3. Encodes with tokenizer.encode and for the input id's.
+4. model.generate to generate the model with a specified maximum length.
 
+#### Beam search
+
+Beam search reduces the risk of missing hidden high probability word sequences by keeping the most likely num_beams of hypotheses at each time step and eventually choosing the hypothesis that has the overall highest probability.
+
+1. beam_output after generating a model with a specified number of beams and maximum length.
+
+This output still contains repetitions of the same sequences.
+
+2. Introduce n-grams, a sequence of n words penalties. This ensures that no n-gram appears twice by manually setting the probability of next words that could create an already seen n-gram to 0.
+
+When doing this, we see that repetition gets reduced. Here was our input and output:
+
+```
+beam_output = model.generate(
+    input_ids,
+    max_length=100,
+    num_beams=5,
+    no_repeat_ngram_size=4,
+    early_stopping=True
+)
+```
+Output
+```
+We have a lot of new SOCs in stock, and we are working hard to get them into the hands of our customers as quickly as possible."
+
+The company said it was working closely with the U.S. Department of Homeland Security and the Federal Bureau of Investigation.
+
+"We will continue to work closely with our partners to ensure that our customers have the best experience with our products and services," the company said in a statement. "We are committed to providing our customers with the...
+```
+Interestingly, the output starts to use language from what appears to be some kind of extremely negative event!
+
+There are some notes about Beam search, mentioning that it works well with tasks where the length of the desired generated output is predictable. However it doesn't work as well for open-ended generation, such as dialog and story generation.
+
+Beam search suffers heavily from repetitive generation. This is especially hard to control with n-gram or other penalties in story generation.
+
+High quality human language does not follow a distribution of high probability next words. In other words, we as humans want generated text to surprise us and no be boring or predictable. BeamSearch in general is, "not surprising," because it is be default, being "safe" with how it predicts words.
+
+####
 
 
 # References
